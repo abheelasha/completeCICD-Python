@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build Docker') {
             steps {
-                scripts {
+                script {
                     sh '''
                     echo 'Build Docker Image'
                     docker build -t akiran0593/cicd-e2e-python:${BUILD_NUMBER} .
@@ -32,7 +32,7 @@ pipeline {
                 //REGISTRY_CREDENTIALS = credentials('docker-cred')
                 //}
             steps {
-                scripts {
+                script {
                     sh '''
                     echo 'Push to Docker Hub'
                     docker push akiran0593/cicd-e2e-python:${BUILD_NUMBER}
