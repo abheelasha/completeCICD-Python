@@ -59,6 +59,10 @@ pipeline {
 
 
             steps {
+                environment {
+                    GIT_REPO_NAME = "completeCICD-Python"
+                    GIT_USER_NAME = "abheelasha"
+                    }
                 script{
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                     //withCredentials([usernamePassword(credentialsId: 'f87a34a8-0e09-45e7-b9cf-6dc68feac670', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
@@ -73,7 +77,7 @@ pipeline {
                         git add deploy/deploy.yaml
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
-                        git push https://github.com/abheelasha/completeCICD-Python.git HEAD:main
+                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                         '''                        
                     }
                 }
