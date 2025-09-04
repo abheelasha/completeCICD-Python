@@ -20,17 +20,24 @@ pipeline {
                     echo 'Build Docker Image'
                     docker build -t akiran0593/cicd-e2e-python:${BUILD_NUMBER} .
                     echo 'Build Complete'
+                    '''
                     }
-                
             }
+                    
         }
         stage('Pushing Artifacts') {
+            
+            //environment {
+                //DOCKER_IMAGE = "akiran0593/ultimate-cicd:${BUILD_NUMBER}"
+                //REGISTRY_CREDENTIALS = credentials('docker-cred')
+                //}
             steps {
                 scripts {
                     sh '''
                     echo 'Push to Docker Hub'
-                    docker push -t akiran0593/cicd-e2e-python:${BUILD_NUMBER}
+                    docker push akiran0593/cicd-e2e-python:${BUILD_NUMBER}
                     echo 'Push Complete'
+                    '''
                 }
             }
         }
@@ -42,14 +49,25 @@ pipeline {
         }
 
         stage('Update K8S manifest & push to Repo'){
+            environment {
+            GIT_REPO_NAME = "completeCICD-Python.git"
+            GIT_USER_NAME = "abheelasha"
+        }
+
+
             steps {
                 script{
-                    withCredentials([usernamePassword(credentialsId: 'f87a34a8-0e09-45e7-b9cf-6dc68feac670', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                    //withCredentials([usernamePassword(credentialsId: 'f87a34a8-0e09-45e7-b9cf-6dc68feac670', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh '''
-                        cat deploy.yaml
-                        sed -i '' "s/32/${BUILD_NUMBER}/g" deploy.yaml
-                        cat deploy.yaml
-                        git add deploy.yaml
+                        pwd
+                        git config --global --add safe.directory "*"
+                        git config user.email "kiran.abheelasha@gmail.com"
+                        git config user.name "abheelasha"
+                        cat deploy/deploy.yaml
+                        sed -i '' "s/32/${BUILD_NUMBER}/g" deploy/deploy.yaml
+                        cat deploy/deploy.yaml
+                        git add deploy/deploy.yaml
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
                         git push https://github.com/abheelasha/completeCICD-Python.git HEAD:main
