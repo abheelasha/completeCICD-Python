@@ -18,7 +18,7 @@ pipeline {
                 script {
                     sh '''
                     echo 'Build Docker Image'
-                    docker build -t akiran0593/cicd-e2e-python:${BUILD_NUMBER} .
+                    docker build -t akiran0593/todo:${BUILD_NUMBER} .
                     echo 'Build Complete'
                     '''
                     }
@@ -37,7 +37,7 @@ pipeline {
                         sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         echo 'Push to Docker Hub'
-                        docker push akiran0593/cicd-e2e-python:${BUILD_NUMBER}
+                        docker push akiran0593/todo:${BUILD_NUMBER}
                         echo 'Push Complete'
                         '''
                 }
