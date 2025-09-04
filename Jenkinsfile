@@ -32,12 +32,14 @@ pipeline {
                 //REGISTRY_CREDENTIALS = credentials('docker-cred')
                 //}
             steps {
-                script {
-                    sh '''
-                    echo 'Push to Docker Hub'
-                    docker push akiran0593/cicd-e2e-python:${BUILD_NUMBER}
-                    echo 'Push Complete'
-                    '''
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh '''
+                        echo 'Push to Docker Hub'
+                        docker push akiran0593/cicd-e2e-python:${BUILD_NUMBER}
+                        echo 'Push Complete'
+                        '''
+                }
                 }
             }
         }
