@@ -35,6 +35,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
                         sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         echo 'Push to Docker Hub'
                         docker push akiran0593/cicd-e2e-python:${BUILD_NUMBER}
                         echo 'Push Complete'
